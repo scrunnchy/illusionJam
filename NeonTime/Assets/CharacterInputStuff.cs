@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterInput : MonoBehaviour
+public class CharacterInputStuff : MonoBehaviour
 {
-    public float speed = 10.0f;
+    public float speed = 80.0f;
 
     public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
     public RotationAxes axes = RotationAxes.MouseXAndY;
@@ -19,10 +19,13 @@ public class CharacterInput : MonoBehaviour
 
     float rotationY = 0F;
 
+    CharacterController controller;
+
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -37,9 +40,9 @@ public class CharacterInput : MonoBehaviour
         Vector3 forward = transform.forward;
         forward.y = 0;
 
-        transform.position += forward * translationForward;
-        transform.Translate(translationSideways, 0, 0);
-        
+        controller.SimpleMove(forward * translationForward);
+        controller.SimpleMove(new Vector3(translationSideways, 0, 0));
+
         if (axes == RotationAxes.MouseXAndY)
         {
             float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;
